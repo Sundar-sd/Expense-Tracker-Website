@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import authRoutes from './routes/authRoutes.js';
 
 dotenv.config();
 
@@ -10,9 +11,11 @@ const PORT = process.env.PORT || 8000;
 app.use(cors());
 app.use(express.json());
 
-app.get('/',(req,res) => {
-    res.json({ message : 'AI Expense Tracker API is running'});
+app.get('/', (req, res) => {
+    res.json({ message: 'AI Expense Tracker API is running' });
 });
+
+app.use('/api/auth', authRoutes);
 
 app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`);
