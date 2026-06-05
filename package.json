@@ -1,6 +1,7 @@
 {
   "name": "ai-expense-tracker-fullstack",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "cd frontend/ai-expense-tracker && npm run build"
   },
