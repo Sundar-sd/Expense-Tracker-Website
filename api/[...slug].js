@@ -1,8 +1,7 @@
-import serverless from 'serverless-http';
-import app from '../backend/app.js';
-
-console.log("API FUNCTION LOADED");
-
-export default serverless(app);
-
+export default function handler(req, res) {
+  res.status(200).json({
+    success: true,
+    url: req.url
+  });
+}
 
