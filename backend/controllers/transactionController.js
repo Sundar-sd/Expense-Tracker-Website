@@ -1,4 +1,6 @@
 import pool from '../db.js';
+import { analyzeTransactionList } from '../utils/gemini.js';
+
 
 export const getTransactions = async (req, res) => {
     const { startDate, endDate, categoryId, type, search, limit = 50, offset = 0 } = req.query;
@@ -159,5 +161,56 @@ export const deleteTransaction = async (req, res) => {
     } catch (error) {
         console.error('DeleteTransaction error:', error);
         res.status(500).json({ message: 'Server error' });
+    }
+};
+
+export const analyzeTransactions = async (req, res) => {
+    // Accept several common request body key variants for robustness
+    let transactionIds = req.body.transactionIds ?? req.body.transactionIDs ?? req.body.transactionsIDs ?? req.body.ids ?? req.body.transaction_ids;
+
+    // If the client sent JSON as a string, try to parse it
+    if (!Array.isArray(transactionIds) && typeof transactionIds === 'string') {
+        try {
+            const parsed = JSON.parse(transactionIds);
+            if (Array.isArray(parsed)) transactionIds = parsed;
+        } catch (e) {
+            // ignore parse errors and fall through to validation
+        }
+    }
+
+    if (!Array.isArray(transactionIds) || transactionIds.length === 0) {
+        return res.status(400).json({ message: 'transactionIds array is required' });
+    }
+
+    // Normalize to integers and limit to 50 IDs
+    const ids = transactionIds.map((v) => Number(v)).filter((n) => Number.isInteger(n)).slice(0, 50);
+
+    try {
+        const result = await pool.query(
+            `SELECT t.id, t.amount, t.type, t.description, t.transaction_date,
+                    c.name AS category_name
+             FROM transactions t
+             LEFT JOIN categories c ON c.id = t.category_id
+             WHERE t.user_id = $1 AND t.id = ANY($2::int[])
+             ORDER BY t.transaction_date DESC`,
+            [req.userId, ids]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'No transactions found for analysis' });
+        }
+
+        const userRes = await pool.query('SELECT currency FROM users WHERE id = $1', [req.userId]);
+        const currency = userRes.rows[0]?.currency || 'USD';
+
+        const analysis = await analyzeTransactionList({
+            transactions: result.rows,
+            currency,
+        });
+
+        res.json(analysis);
+    } catch (error) {
+        console.error('AnalyzeTransactions error:', error);
+        res.status(500).json({ message: error.message || 'Server error' });
     }
 };
