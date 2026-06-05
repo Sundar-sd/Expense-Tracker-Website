@@ -24,11 +24,11 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/transactions", transactionRoutes);
-app.use("/api/budget", budgetRoutes); // legacy singular path
-app.use("/api/budgets", budgetRoutes); // plural path used by frontend
+app.use("/api/budget", budgetRoutes); 
+app.use("/api/budgets", budgetRoutes); 
 app.use("/api/dashboard", dashboardRoutes);
-app.use("/api/insight", insightRoutes); // legacy singular path
-app.use("/api/insights", insightRoutes); // plural path used by frontend
+app.use("/api/insight", insightRoutes); 
+app.use("/api/insights", insightRoutes); 
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
