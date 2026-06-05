@@ -1,0 +1,9 @@
+{
+  "buildCommand": "cd frontend/ai-expense-tracker && npm install && npm run build",
+  "outputDirectory": "frontend/ai-expense-tracker/dist",
+  "functions": {
+    "api/[...slug].js": {
+      "runtime": "nodejs20.x"
+    }
+  }
+}
