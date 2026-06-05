@@ -1,7 +1,7 @@
 export default function handler(req, res) {
   res.status(200).json({
-    success: true,
-    url: req.url
+    message: "slug reached",
+    url: req.url,
+    method: req.method
   });
 }
-
