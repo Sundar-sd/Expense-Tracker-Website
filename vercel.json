@@ -1,4 +1,10 @@
 {
   "buildCommand": "cd frontend/ai-expense-tracker && npm run build",
-  "outputDirectory": "frontend/ai-expense-tracker/dist"
+  "outputDirectory": "frontend/ai-expense-tracker/dist",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/[...slug]"
+    }
+  ]
 }
