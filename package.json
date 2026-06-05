@@ -2,16 +2,6 @@
   "name": "ai-expense-tracker-fullstack",
   "private": true,
   "scripts": {
-    "build": "cd frontend/ai-expense-tracker && npm install && npm run build"
-  },
-  "dependencies": {
-    "serverless-http": "^3.0.0",
-    "@google/genai": "^1.38.0",
-    "bcryptjs": "3.0.2",
-    "cors": "^2.8.6",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "pg": "^8.17.2"
+    "build": "cd frontend/ai-expense-tracker && npm run build"
   }
 }
